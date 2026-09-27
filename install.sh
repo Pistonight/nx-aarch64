@@ -37,6 +37,17 @@ if [ "$target" = "macos-x64" ]; then
     exit 1
 fi
 
+# GNU tar needs the xz command for .tar.xz, macOS tar has it built in.
+# Fall back to python3 if xz is not available
+if [ "$os" = "macos" ] || command -v xz > /dev/null 2>&1; then
+    extract=tar
+elif command -v python3 > /dev/null 2>&1; then
+    extract=python3
+else
+    echo "error: extracting .tar.xz needs either xz or python3, please install one of them" >&2
+    exit 1
+fi
+
 name="nx-aarch64-$VERSION"
 package="$name-$target.tar.xz"
 url="https://github.com/$REPO/releases/download/$VERSION/$package"
@@ -51,7 +62,18 @@ curl -fL --retry 3 -o "$tmp/$package" "$url"
 
 echo "extracting to $dest"
 mkdir "$tmp/$name"
-tar -xJf "$tmp/$package" -C "$tmp/$name"
+if [ "$extract" = "tar" ]; then
+    tar -xJf "$tmp/$package" -C "$tmp/$name"
+else
+    python3 -c '
+import sys, tarfile
+with tarfile.open(sys.argv[1], "r:xz") as tar:
+    if hasattr(tarfile, "data_filter"):
+        tar.extractall(sys.argv[2], filter="tar")
+    else:
+        tar.extractall(sys.argv[2])
+' "$tmp/$package" "$tmp/$name"
+fi
 rm -rf "$dest"
 mv "$tmp/$name" "$dest"
 
