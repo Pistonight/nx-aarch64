@@ -1,0 +1,28 @@
+version: '3'
+
+vars:
+  TARGETS: linux-x64 linux-arm64 macos-arm64
+
+tasks:
+  build:
+    - cargo run --release -- {{.CLI_ARGS}}
+  publish:
+    vars:
+      TAG: '{{.CLI_ARGS}}'
+      PACKAGES: '{{range $i, $t := splitList " " .TARGETS}}{{if $i}} {{end}}dist/nx-aarch64-{{$.TAG}}-{{$t}}.tar.xz{{end}}'
+    cmds:
+      - silent: true
+        cmd: |
+          if [[ -z "{{.TAG}}" ]]; then
+            echo "error: missing tag, usage: task publish -- <llvm-version>-<revision>" >&2
+            exit 1
+          fi
+          for f in {{.PACKAGES}}; do
+            if [[ ! -f "$f" ]]; then
+              echo "error: $f not found, run task build first" >&2
+              exit 1
+            fi
+          done
+      - git tag '{{.TAG}}'
+      - git push origin '{{.TAG}}'
+      - gh release create "{{.TAG}}" --draft --title "{{.TAG}}" --notes "" {{.PACKAGES}}
