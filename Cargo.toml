@@ -6,7 +6,7 @@ publish = false
 
 [dependencies.cu]
 package = "pistonite-cu"
-version = "0.9.4"
+version = "0.9.5"
 features = [ "cli", "coroutine-heavy", "derive", "fs", "json" ]
 
 [dependencies]

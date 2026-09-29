@@ -136,6 +136,7 @@ async fn main(args: Cli) -> cu::Result<()> {
     let bar = cu::progress(format!("nx-aarch64 {version}-{revision}"))
         .total(jobs.len())
         .eta(false)
+        .percentage(false)
         .spawn();
     let handles: Vec<_> = jobs
         .into_iter()

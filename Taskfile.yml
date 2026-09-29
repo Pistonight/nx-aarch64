@@ -6,6 +6,12 @@ vars:
 tasks:
   build:
     - cargo run --release -- {{.CLI_ARGS}}
+  clean:
+    - rm -rf dist
+  nuke:
+    - task: clean
+    - cargo clean
+    - rm -rf toolchains
   publish:
     vars:
       TAG: '{{.CLI_ARGS}}'

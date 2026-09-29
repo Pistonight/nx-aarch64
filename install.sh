@@ -6,6 +6,8 @@
 # Or without cloning the repo:
 #   curl -fsSL https://raw.githubusercontent.com/Pistonight/nx-aarch64/main/install.sh | VERSION=22.1.8-1 OUTPUT=path/to/dir sh
 #
+# VERSION should be one of the release tags
+#
 # The toolchain is extracted to $OUTPUT/nx-aarch64-$VERSION/ (bin/ and include/),
 # replacing it if it already exists.
 set -eu

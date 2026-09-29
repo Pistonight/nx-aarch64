@@ -19,3 +19,4 @@ include/libunwind.modulemap
 include/unwind.h
 include/unwind_arm_ehabi.h
 include/unwind_itanium.h
+lib/clang/22/include
