@@ -3,6 +3,8 @@ bin/clang++
 bin/clang-22
 bin/clang-cl
 bin/clang-cpp
+bin/clang-format
+bin/clang-tidy
 bin/ld.lld
 bin/ld64.lld
 bin/lld
